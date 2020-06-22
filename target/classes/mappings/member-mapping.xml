@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MemberDAO">
+
+	<select id="getMember" parameterType="String" resultType="member">
+		SELECT *	
+		  FROM member
+		 WHERE id=#{id} 
+	</select>
+	
+	<select id="loginMember" resultType="member">
+		SELECT *	
+		  FROM member
+		 WHERE id=#{id} AND pwd=#{pwd}
+	</select>
+
+	<insert id="insertMember">
+		INSERT INTO member(id, pwd, name, email, zip_num, address, phone)
+		VALUES(#{id}, #{pwd}, #{name}, #{email}, #{zip_num}, #{address}, #{phone})
+	</insert>
+	
+	<select id="selectAddressByDong" parameterType="String" resultType="address">
+		SELECT * FROM address
+		 WHERE dong LIKE '%'||#{dong}||'%'
+	</select>
+	
+	<select id="getMemberByNameAndEmail" resultType="member">
+		SELECT * FROM member
+		WHERE name=#{name} AND email=#{email}
+	</select>
+	
+	<select id="findPassword" resultType="member">
+		SELECT * FROM member
+		WHERE id=#{id} AND name=#{name} AND email=#{email}
+	</select>
+	
+	<select id="listMember" parameterType="String" resultType="member">
+		SELECT *
+		FROM member
+		WHERE name like '%'||#{name}||'%'
+		ORDER BY regdate DESC
+	</select>
+
+</mapper>
+
+
+
+
+
+

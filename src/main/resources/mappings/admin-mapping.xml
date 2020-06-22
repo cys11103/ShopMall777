@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="WorkerDAO">
+
+	<select id="workerCheck" parameterType="String" resultType="String"> <!-- parameterType(입력값) : where절의 id의 타입 , resultType : select절의 pwd의 타입, DAO로 넘겨줌-->
+		SELECT pwd
+		FROM worker
+		WHERE id=#{id}
+	</select>
+	
+	<select id="getEmployee" parameterType="String" resultType="admin"> <!-- select절이 *일 때 : admin이름 붙임 -->
+		SELECT *
+		FROM worker
+		WHERE id=#{id} 
+	</select>
+	
+	
+
+</mapper>

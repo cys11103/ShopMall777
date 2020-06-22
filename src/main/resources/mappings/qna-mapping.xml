@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="QnaDAO">
+
+	<select id="listQna" parameterType="String" resultType="qna"> <!-- id를 조건으로 하므로 String -->
+		SELECT *
+		FROM qna
+		WHERE id=#{id}
+		ORDER BY qseq DESC <!-- 내림차순으로 해서 최신순으로 보도록함 -->
+	</select>
+
+	<select id="getQna" parameterType="int" resultType="qna"> <!-- 게시글 일련번호를 조건으로 하므로 int -->
+		SELECT *
+		FROM qna
+		WHERE qseq = #{qseq}
+	</select>
+	
+	<insert id="insertQna">
+		INSERT INTO qna(qseq, subject, content, id)
+		VALUES (qna_seq.nextval, #{subject}, #{content}, #{id})
+	</insert>
+	
+	<select id="listAllQna" resultType="qna"><!-- 입력값 없어서 parametertype 안줘도됨 -->
+		SELECT *
+		FROM qna
+		ORDER BY indate DESC <!-- 날짜는 자동인듯 -->
+	</select>
+	
+	<update id="updateQna">
+		UPDATE qna
+		SET reply=#{reply}, rep='2'
+		WHERE qseq = #{qseq}
+	</update>
+
+</mapper>

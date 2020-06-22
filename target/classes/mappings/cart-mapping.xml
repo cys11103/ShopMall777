@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CartDAO">
+
+	<insert id="insertCart">
+		INSERT INTO cart(cseq, id, pseq, quantity)
+		VALUES (cart_seq.nextval, #{id}, #{pseq}, #{quantity})
+	</insert>
+
+	<select id="listCart" parameterType="String" resultType="cart"> <!-- resultType 지정한 것은 Alias에서 사용함 -->
+		SELECT * FROM cart_view
+		WHERE id = #{id}
+	</select>
+	
+	<delete id="deleteCart" parameterType="int">
+		DELETE FROM cart
+		WHERE cseq = #{cseq}
+	</delete>
+	
+	<update id="updateCart" parameterType="int">
+		UPDATE cart 
+		SET result = '2'
+		WHERE cseq = #{cseq}
+	</update>
+</mapper>

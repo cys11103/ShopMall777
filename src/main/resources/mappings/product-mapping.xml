@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ProductDAO">
+
+	<select id="getNewProductList" resultType="product">
+		SELECT * FROM new_pro_view
+		ORDER BY name
+	</select>
+	
+	<select id="getBestProductList" resultType="product">
+		SELECT * FROM best_pro_view
+		ORDER BY name
+	</select>
+	
+	<select id="getProduct" resultType="product">
+		SELECT * FROM product
+		 WHERE pseq=#{pseq}
+	</select>
+	
+	<select id="getProductListByKind"  resultType="product">
+		SELECT * FROM product
+		 WHERE kind=#{kind}
+		 ORDER BY name
+	</select>
+	
+	<select id="countProductList" parameterType="String" resultType="int">
+		SELECT count(*)
+		FROM product
+		WHERE name like '%'||#{name}||'%'
+	</select>
+	
+	<resultMap type="com.green.biz.product.SalesQuantity" id="salesMap">
+		<result column="pname" property="pname"/>
+		<result column="saels_count" property="quantity"/>
+	</resultMap>
+	
+	
+	<select id="getProductSales" resultMap="salesMap">
+		SELECT pname, sum(quantity) as saels_count
+		FROM order_view
+		WHERE result='2'
+		GROUP BY pname
+	</select>
+	
+	
+	<!-- pageNum : 현재 페이지 번호, numPerPage : 페이지 당 출력항목 수 -->
+	<select id="listWithPaging"  parameterType="hashMap" resultType="product">
+		<!-- 조건연산자가 들어갈 때 CDATA 사용 -->
+		<![CDATA[
+		SELECT pseq, regdate, name, price1, price2, useyn, bestyn
+		FROM 
+			(SELECT rownum rn, pseq, regdate, name, price1, price2, useyn, bestyn
+			FROM product
+			WHERE name like '%'||#{key}||'%' AND rownum <= #{criteria.pageNum} * #{criteria.numPerPage})
+		WHERE rn > (#{criteria.pageNum}-1) * #{criteria.numPerPage}
+		]]>
+	</select>
+	
+	<select id="listProduct" parameterType="String" resultType="product">
+		SELECT pseq, regdate, name, price1, price2, useyn, bestyn
+		FROM product
+		WHERE name like '%'||#{name}||'%'
+		ORDER BY pseq DESC
+	</select>
+	
+	<insert id="insertProduct">
+		INSERT INTO product(pseq, kind, name, price1, price2, price3, content, image)
+		VALUES (product_seq.nextval, #{kind}, #{name}, #{price1}, #{price2}, #{price3}, #{content}, #{image})
+	</insert>
+	
+	<update id="updateProduct">
+		UPDATE product
+		SET kind=#{kind}, useyn=#{useyn}, name=#{name}, price1=#{price1}, price2=#{price2}, price3=#{price3},
+			content=#{content}, image=#{image}, bestyn=#{bestyn}
+		WHERE pseq=#{pseq}
+	</update>
+
+</mapper>
